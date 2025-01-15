@@ -1,37 +1,60 @@
 require("dotenv").config();
 const express = require("express");
-const app = express();
-const port = process.env.PORT || 8080;
-const connectdb = require("./DB/db");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const connectdb = require("./DB/db");
 const userrouter = require("./Routes/user.route");
+
+const app = express();
+const port = process.env.PORT || 8080;
+
+// Connect to the database
 connectdb();
+
+// CORS configuration
+const corsOptions = {
+  origin: "http://localhost:3000", // Allow requests from this domain
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
+  credentials: true, // Allow cookies to be sent with requests
+  allowedHeaders: ["Content-Type", "Authorization"], // Specify allowed headers
+};
+
+// Use CORS middleware
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // Handle preflight requests globally
+
+// Middleware to ensure headers are added for all requests
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*"); // Allow all origins or restrict to specific domains
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   res.header(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
   );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Credentials", "true");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
   next();
 });
 
-// Configure CORS
-const corsOptions = {
-  origin: ["*", "http://localhost:3000"], // Add local testing and production domains
-  methods: ["GET", "POST", "OPTIONS"], // Include OPTIONS for preflight requests
-};
-app.use(cors(corsOptions)); // Enable CORS
-app.options("*", cors(corsOptions)); // Handle preflight requests globally
+// Body parsing middleware
 app.use(express.json());
 app.use(cookieParser());
 
+// Test route for verifying CORS
+app.get("/test-cors", (req, res) => {
+  res.json({ message: "CORS is working!" });
+});
+
+// Main routes
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
 app.use("/api/v1", userrouter);
 
+// Start the server
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
