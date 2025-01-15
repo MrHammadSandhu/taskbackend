@@ -12,34 +12,12 @@ const port = process.env.PORT || 8080;
 connectdb();
 
 // CORS configuration
-const corsOptions = {
-  origin: "*", // Replace with your deployed frontend URL
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true, // Allow cookies
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
 
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // Handle preflight
-
-// Use CORS middleware
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // Handle preflight requests globally
-
-// Middleware to ensure headers are added for all requests
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Credentials", "true");
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-  next();
-});
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 // Body parsing middleware
 app.use(express.json());
