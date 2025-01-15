@@ -7,12 +7,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const userrouter = require("./Routes/user.route");
 connectdb();
-app.use(
-  cors({
-    origin: "*", // Your Next.js frontend URL
-    credentials: true, // Allows cookies to be sent and received
-  })
-);
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
