@@ -13,11 +13,14 @@ connectdb();
 
 // CORS configuration
 const corsOptions = {
-  origin: "http://localhost:3000", // Allow requests from this domain
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed HTTP methods
-  credentials: true, // Allow cookies to be sent with requests
-  allowedHeaders: ["Content-Type", "Authorization"], // Specify allowed headers
+  origin: "https://taskfrontend-tau.vercel.app/", // Replace with your deployed frontend URL
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true, // Allow cookies
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // Handle preflight
 
 // Use CORS middleware
 app.use(cors(corsOptions));
@@ -25,7 +28,7 @@ app.options("*", cors(corsOptions)); // Handle preflight requests globally
 
 // Middleware to ensure headers are added for all requests
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000", "*");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
