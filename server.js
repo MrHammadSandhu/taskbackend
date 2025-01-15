@@ -13,7 +13,7 @@ connectdb();
 
 // CORS configuration
 const corsOptions = {
-  origin: "https://taskfrontend-tau.vercel.app/", // Replace with your deployed frontend URL
+  origin: "*", // Replace with your deployed frontend URL
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true, // Allow cookies
   allowedHeaders: ["Content-Type", "Authorization"],
